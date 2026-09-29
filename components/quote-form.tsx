@@ -11,7 +11,28 @@ type Step = {
   type: "select" | "text"
   options?: { label: string }[]
   placeholder?: string
-  field?: string
+  field: string
+}
+
+const PROJECT_TYPE_STEP: Step = {
+  title: "What type of project do you have in mind?",
+  type: "select",
+  field: "project_type",
+  options: [
+    { label: "Pergola" },
+    { label: "Fencing" },
+    { label: "Concrete Patio (Driveway / Slab)" },
+  ],
+}
+
+const POSITION_STEP: Step = {
+  title: "Where will the structure be positioned?",
+  type: "select",
+  field: "location",
+  options: [
+    { label: "Attached to residence" },
+    { label: "Free-standing" },
+  ],
 }
 
 const CONTACT_STEPS: Step[] = [
@@ -20,47 +41,24 @@ const CONTACT_STEPS: Step[] = [
   { title: "Best number to reach you", type: "text", placeholder: "(555) 123-4567", field: "phone" },
 ]
 
-const STEPS: Step[] = [
-  {
-    title: "What type of project do you have in mind?",
-    type: "select",
-    options: [
-      { label: "Pergola" },
-      { label: "Fencing" },
-      { label: "Concrete Patio (Driveway / Slab)" },
-    ],
-  },
-  {
-    title: "What is your approximate budget?",
-    type: "select",
-    options: [
-      { label: "$6,000 - $9,000" },
-      { label: "$10,000 - $15,000" },
-      { label: "$25,000+ (Custom)" },
-    ],
-  },
-  {
-    title: "Where will the structure be positioned?",
-    type: "select",
-    options: [
-      { label: "Attached to residence" },
-      { label: "Free-standing" },
-    ],
-  },
-  ...CONTACT_STEPS,
-]
+function buildSteps(projectType?: string): Step[] {
+  const steps = [PROJECT_TYPE_STEP]
+  if (projectType === "Pergola") steps.push(POSITION_STEP)
+  return [...steps, ...CONTACT_STEPS]
+}
 
 export function QuoteForm({ id }: { id?: string }) {
   const [currentStep, setCurrentStep] = useState(0)
-  const [answers, setAnswers] = useState<Record<number, string>>({})
+  const [answers, setAnswers] = useState<Record<string, string>>({})
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [animating, setAnimating] = useState(false)
   const [slideDirection, setSlideDirection] = useState<"up" | "down">("up")
   const sectionRef = useRef<HTMLElement>(null)
 
-  const totalSteps = STEPS.length
-  const step = STEPS[currentStep]
+  const steps = buildSteps(answers.project_type)
+  const totalSteps = steps.length
+  const step = steps[currentStep]
   const progress = ((currentStep + 1) / totalSteps) * 100
 
   const advanceStep = (direction: "up" | "down", nextStep: number) => {
@@ -73,7 +71,7 @@ export function QuoteForm({ id }: { id?: string }) {
   }
 
   const handleSelect = (value: string) => {
-    setAnswers((prev) => ({ ...prev, [currentStep]: value }))
+    setAnswers((prev) => ({ ...prev, [step.field]: value }))
     if (currentStep < totalSteps - 1) {
       setTimeout(() => {
         advanceStep("up", currentStep + 1)
@@ -93,13 +91,11 @@ export function QuoteForm({ id }: { id?: string }) {
   }
 
   const buildPayload = useCallback(() => ({
-    project_type: "Patio Cover",
-    structure_type: answers[0] || "",
-    budget: answers[1] || "",
-    location: answers[2] || "",
-    name: answers[3] || "",
-    email: answers[4] || "",
-    phone: answers[5] || "",
+    project_type: answers.project_type || "",
+    location: answers.location || "",
+    name: answers.name || "",
+    email: answers.email || "",
+    phone: answers.phone || "",
   }), [answers])
 
   const handleSubmit = async () => {
@@ -116,12 +112,12 @@ export function QuoteForm({ id }: { id?: string }) {
       setSubmitting(false)
       setSubmitted(true)
       if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
-        ;(window as any).fbq("track", "Lead", { content_name: "Patio Cover" })
+        ;(window as any).fbq("track", "Lead", { content_name: answers.project_type || "Patio Cover" })
       }
     }
   }
 
-  const canProceed = answers[currentStep] !== undefined && answers[currentStep] !== ""
+  const canProceed = answers[step.field] !== undefined && answers[step.field] !== ""
 
   if (submitted) {
     return (

@@ -22,10 +22,10 @@ export function HeroSection({ onGetQuote }: { onGetQuote: () => void }) {
           Established Craftsmanship
         </p>
         <h1 className="font-serif text-4xl font-bold leading-tight tracking-tight text-primary-foreground sm:text-5xl md:text-6xl lg:text-7xl text-balance">
-          Transform Your Outdoors with Custom Patio Covers Designed to Impress
+          Transform Your Outdoors. New Project?. Planned & Finished.
         </h1>
         <p className="mx-auto mt-8 max-w-2xl text-base text-white/85 leading-relaxed sm:text-lg">
-          Handcrafted patio covers that turn ordinary backyards into luxury retreats.
+          Custom pergolas, concrete & fencing. Designing & installing projects worth showing off.
           Precision engineering. Uncompromising quality.
         </p>
         <div className="mt-12 flex items-center justify-center gap-6">

@@ -22,12 +22,12 @@ const CONTACT_STEPS: Step[] = [
 
 const STEPS: Step[] = [
   {
-    title: "What type of patio cover are you considering?",
+    title: "What type of project do you have in mind?",
     type: "select",
     options: [
-      { label: "Insulated Top" },
-      { label: "Lattice (Partial sunlight)" },
-      { label: "Louvered (Adjustable)" },
+      { label: "Pergola" },
+      { label: "Fencing" },
+      { label: "Concrete Patio (Driveway / Slab)" },
     ],
   },
   {

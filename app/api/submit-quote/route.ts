@@ -1,19 +1,8 @@
 import { NextResponse } from "next/server"
 
-const WEBHOOK_URLS: Record<string, string> = {
-  "Patio Cover":
-    "https://services.leadconnectorhq.com/hooks/Xm0mELqHDpnfrX9C0Ih2/webhook-trigger/d56a7ab6-de7f-4648-adda-1ff6449847e2",
-  "Interior Shades":
-    "https://services.leadconnectorhq.com/hooks/Xm0mELqHDpnfrX9C0Ih2/webhook-trigger/923095d8-6981-4a54-8950-7c9348c2ab22",
-  "Zipper Screen":
-    "https://services.leadconnectorhq.com/hooks/Xm0mELqHDpnfrX9C0Ih2/webhook-trigger/9dfcff9e-9a8e-46bb-9e58-09c41b4b485c",
-  "Retractable Awning":
-    "https://services.leadconnectorhq.com/hooks/Xm0mELqHDpnfrX9C0Ih2/webhook-trigger/48bc2857-130a-4a4e-b06c-335adf949b04",
-}
-
-// Fallback webhook for project types without a dedicated URL
-const FALLBACK_WEBHOOK_URL =
-  "https://services.leadconnectorhq.com/hooks/Xm0mELqHDpnfrX9C0Ih2/webhook-trigger/d56a7ab6-de7f-4648-adda-1ff6449847e2"
+// LeadConnector webhook that receives all quote form submissions
+const WEBHOOK_URL =
+  "https://services.leadconnectorhq.com/hooks/Xm0mELqHDpnfrX9C0Ih2/webhook-trigger/290faf26-98e3-457a-90f0-ebeac1c4a23b"
 
 export async function POST(request: Request) {
   let body: Record<string, string>
@@ -35,13 +24,11 @@ export async function POST(request: Request) {
     )
   }
 
-  const webhookUrl = WEBHOOK_URLS[body.project_type] || FALLBACK_WEBHOOK_URL
-
   try {
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 10000) // 10s timeout
 
-    const res = await fetch(webhookUrl, {
+    const res = await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

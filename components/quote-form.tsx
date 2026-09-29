@@ -188,7 +188,7 @@ export function QuoteForm({ id }: { id?: string }) {
                       onClick={() => handleSelect(option.label)}
                       className={cn(
                         "flex items-center gap-3 border rounded-lg px-3 py-2.5 text-left text-sm transition-all",
-                        answers[currentStep] === option.label
+                        answers[step.field] === option.label
                           ? "border-accent bg-accent/5 text-card-foreground"
                           : "border-border bg-card text-muted-foreground hover:border-accent/40 hover:text-card-foreground"
                       )}
@@ -196,12 +196,12 @@ export function QuoteForm({ id }: { id?: string }) {
                       <div
                         className={cn(
                           "flex h-3.5 w-3.5 shrink-0 items-center justify-center border rounded transition-all",
-                          answers[currentStep] === option.label
+                          answers[step.field] === option.label
                             ? "border-accent bg-accent"
                             : "border-muted-foreground/30"
                         )}
                       >
-                        {answers[currentStep] === option.label && (
+                        {answers[step.field] === option.label && (
                           <Check className="h-2 w-2 text-accent-foreground" />
                         )}
                       </div>
@@ -215,8 +215,8 @@ export function QuoteForm({ id }: { id?: string }) {
                 <Input
                   type={step.field === "email" ? "email" : step.field === "phone" ? "tel" : "text"}
                   placeholder={step.placeholder}
-                  value={answers[currentStep] || ""}
-                  onChange={(e) => setAnswers((prev) => ({ ...prev, [currentStep]: e.target.value }))}
+                  value={answers[step.field] || ""}
+                  onChange={(e) => setAnswers((prev) => ({ ...prev, [step.field]: e.target.value }))}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" && !e.nativeEvent.isComposing && canProceed) {
                       currentStep < totalSteps - 1 ? handleNext() : handleSubmit()
